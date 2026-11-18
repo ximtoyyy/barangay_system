@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">{% include "includes/page_header.html" with icon="doc" title=r.reference_no sub=r.document_type %}
+<div class="info-grid">
+  <div><span>Resident</span><b>{{ r.resident.full_name }}</b><small>{{ r.resident.address }}</small><small>{{ r.resident.contact_no }} &middot; {{ r.resident.user.email }}</small></div>
+  <div><span>Purpose</span><b>{{ r.purpose }}</b></div>
+  {% if r.details %}<div class="full"><span>Other details</span><b>{{ r.details }}</b></div>{% endif %}
+  <div><span>Fee</span><b>{{ r.fee_label }}{% if r.payment_status != "free" %} <span class="badge">{{ r.get_payment_status_display }}</span>{% endif %}</b>
+    {% if r.paid_at %}<small>Paid {{ r.paid_at|date:"M d, Y h:i A" }}</small>{% endif %}</div>
+  {% if r.fee_charged > 0 %}<div><span>Payment method</span><b>{{ r.get_payment_method_display }}</b>
+    {% if r.payment_reference %}<small>Reference no.: {{ r.payment_reference }}</small>{% endif %}</div>{% endif %}
+  {% if r.handler_name %}<div><span>Handled by</span><b>{{ r.handler_name }}</b></div>{% endif %}
+</div>
+<div class="btn-row" style="margin:0 0 18px">
+  {% if r.attachment %}<a class="btn btn-light btn-sm" href="{{ r.attachment.url }}" target="_blank">View ID / proof</a>{% endif %}
+  {% if r.payment_proof %}<a class="btn btn-light btn-sm" href="{{ r.payment_proof.url }}" target="_blank">View payment screenshot</a>{% endif %}
+</div>
+<form method="post">{% csrf_token %}
+  {% include "includes/form_fields.html" %}
+  <div class="btn-row">
+    <button class="btn">Update</button>
+    {% if r.status != "ready" and r.status != "released" %}
+    <button class="btn btn-success" formaction="{% url 'mark_ready' r.pk %}">Mark as Ready &amp; Email Resident</button>
+    {% endif %}
+  </div>
+</form></div>
+<div class="card"><a class="btn btn-light" target="_blank" href="{% url 'print_document' r.pk %}">Print Certificate</a>
+&nbsp; <a href="{% url 'staff_dashboard' %}">&larr; Back</a></div>
+{% endblock %}

@@ -1,0 +1,7 @@
+{% extends "certificates/_base.html" %}
+{% block heading %}Barangay Certification of Death{% endblock %}
+{% block body %}
+    <p>This is to certify, based on the records of this barangay, that <b>{{ r.details|default:"____________________" }}</b> (name of the deceased) was a resident of this barangay and has passed away.</p>
+    <p>Date of death: ______________________ &nbsp; Place of death: ______________________</p>
+    <p>This certification is issued upon the request of {% include "certificates/_person.html" %}, for <b>{{ r.purpose }}</b>.</p>
+{% endblock %}

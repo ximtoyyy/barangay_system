@@ -1,0 +1,6 @@
+{% extends "certificates/_base.html" %}
+{% block heading %}Certificate of Solo Parent{% endblock %}
+{% block body %}
+    <p>This is to certify that {% include "certificates/_person.html" %}, is a solo parent and the sole provider of the following child/children: <b>{{ r.details|default:"____________________" }}</b>.</p>
+    <p>This certification is issued upon request for <b>{{ r.purpose }}</b>, including the availment of benefits and privileges given to solo parents under existing laws.</p>
+{% endblock %}

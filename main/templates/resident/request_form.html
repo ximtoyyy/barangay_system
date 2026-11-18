@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card narrow">{% include "includes/page_header.html" with icon="doc" title="New Document Request" sub="Choose the document you need and how you will pay." center=True %}
+<form method="post" enctype="multipart/form-data">{% csrf_token %}
+  {% include "includes/form_fields.html" %}
+  <p class="hint">Free documents need no payment.{% if qr_ready %} If you choose QR Ph, the QR code appears on the next page.{% endif %}</p>
+  <button class="btn btn-block">Submit Request</button>
+</form></div>
+{% endblock %}

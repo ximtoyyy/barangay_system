@@ -1,0 +1,6 @@
+{% extends "certificates/_base.html" %}
+{% block heading %}Certificate of Living Together{% endblock %}
+{% block body %}
+    <p>This is to certify that {% include "certificates/_person.html" %}, and <b>{{ r.details|default:"____________________" }}</b> are living together in the same household at the said address.</p>
+    <p>This certification is issued upon the request of the above-named person for <b>{{ r.purpose }}</b>.</p>
+{% endblock %}

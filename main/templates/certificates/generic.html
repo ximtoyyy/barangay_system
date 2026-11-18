@@ -1,0 +1,6 @@
+{% extends "certificates/_base.html" %}
+{% block heading %}{{ r.document_type.name }}{% endblock %}
+{% block body %}
+    <p>This is to certify that {% include "certificates/_person.html" %}.</p>
+    <p>This certification is issued upon the request of the above-named person for <b>{{ r.purpose }}</b>.</p>
+{% endblock %}

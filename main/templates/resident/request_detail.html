@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">{% include "includes/page_header.html" with icon="doc" title=r.reference_no sub=r.document_type %}
+<div class="info-grid">
+  <div><span>Status</span><b><span class="badge">{{ r.get_status_display }}</span></b></div>
+  <div><span>Fee</span><b>{{ r.fee_label }}{% if r.payment_status != "free" %} <span class="badge">{{ r.get_payment_status_display }}</span>{% endif %}</b></div>
+  {% if r.fee_charged > 0 %}<div><span>Payment method</span><b>{{ r.get_payment_method_display }}</b></div>{% endif %}
+  <div><span>Purpose</span><b>{{ r.purpose }}</b></div>
+  {% if r.details %}<div class="full"><span>Other details</span><b>{{ r.details }}</b></div>{% endif %}
+  {% if r.handler_name %}<div><span>Handled by</span><b>{{ r.handler_name }}</b></div>{% endif %}
+  {% if r.remarks %}<div class="full"><span>Remarks from the barangay</span><b>{{ r.remarks }}</b></div>{% endif %}
+  <div><span>Requested</span><b>{{ r.date_requested|date:"M d, Y h:i A" }}</b></div>
+</div>
+<a href="{% url 'dashboard' %}">&larr; Back to My Requests</a></div>
+
+{% if r.fee_charged > 0 and r.payment_status != "paid" %}
+<div class="card">
+  {% if r.payment_method == "qrph" %}
+    {% include "includes/page_header.html" with icon="card" title="Pay online via QR Ph" sub="Scan, pay, then send your receipt" %}
+    {% if r.payment_status == "verifying" %}
+      <div class="notice">Your proof of payment was sent. Staff will check it and mark your request as paid. You can send it again if you made a mistake.</div>
+    {% endif %}
+    {% if b.qr_ready %}
+      <div class="qr-box">
+        <img src="{{ b.qr_image.url }}" alt="QR Ph code">
+        <div>
+          <b>Amount to pay: {{ r.fee_label }}</b>
+          {% if b.qr_account_name %}<div>Account name: {{ b.qr_account_name }}</div>{% endif %}
+          {% if b.qr_note %}<div class="hint" style="margin:4px 0 0">{{ b.qr_note }}</div>{% endif %}
+          <ol>
+            <li>Open GCash, Maya or your bank app and choose <b>Scan QR</b>.</li>
+            <li>Scan this code and pay exactly <b>{{ r.fee_label }}</b>.</li>
+            <li>Take a screenshot of the receipt and upload it below.</li>
+          </ol>
+        </div>
+      </div>
+      {% if proof_form %}
+      <form method="post" action="{% url 'submit_payment' r.pk %}" enctype="multipart/form-data">{% csrf_token %}
+        {% include "includes/form_fields.html" with form=proof_form %}
+        <button class="btn">Send proof of payment</button>
+      </form>
+      {% endif %}
+    {% else %}
+      <div class="notice">The barangay has not set up its QR code yet. Please pay <b>{{ r.fee_label }}</b> in cash at the Barangay Hall when you claim your document.</div>
+    {% endif %}
+  {% else %}
+    {% include "includes/page_header.html" with icon="card" title="Pay in cash" sub="Pay at the Barangay Hall when you claim your document" %}
+    <p>Please pay <b>{{ r.fee_label }}</b> at the Barangay Hall when you claim your document.</p>
+  {% endif %}
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">{% include "includes/page_header.html" with icon="users" title="Staff Approvals" sub="Staff who sign up cannot log in until you approve them" %}
+{% if pending_staff %}<p><span class="badge">{{ pending_staff }} waiting for approval</span></p>{% endif %}
+<p><a href="?status=pending">Pending</a> | <a href="?status=approved">Approved</a> |
+<a href="?status=rejected">Rejected</a> | <a href="?status=all">All</a></p>
+<table><tr><th>Name</th><th>Email</th><th>Position</th><th>Contact</th><th>Registered</th><th>Last login</th><th>Status</th><th></th></tr>
+{% for r in items %}<tr><td>{{ r.full_name }}</td><td>{{ r.user.email }}</td><td>{{ r.position|default:"-" }}</td>
+<td>{{ r.contact_no }}</td><td>{{ r.date_registered|date:"M d, Y" }}</td>
+<td>{{ r.user.last_login|date:"M d, Y h:i A"|default:"Never" }}</td>
+<td><span class="badge">{{ r.get_approval_display }}</span></td>
+<td><form method="post" action="{% url 'account_action' r.pk 'approve' %}" style="display:inline">{% csrf_token %}<button class="btn btn-success btn-sm">Approve</button></form>
+<form method="post" action="{% url 'account_action' r.pk 'reject' %}" style="display:inline">{% csrf_token %}<button class="btn btn-danger btn-sm">Reject</button></form></td></tr>
+{% empty %}<tr><td colspan="8">No staff accounts here.</td></tr>{% endfor %}</table></div>
+{% endblock %}

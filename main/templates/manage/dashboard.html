@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">{% include "includes/page_header.html" with icon="layout" title="Admin Dashboard" sub="Overview of your requests and accounts" %}<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+  <div><div class="info-grid" style="margin:0"><div><span>Barangay</span><b>{{ barangay_setting.barangay_name|default:"Not set yet" }}</b>
+  <small>{% if barangay_setting.municipality %}{{ barangay_setting.municipality }}{% if barangay_setting.province %}, {{ barangay_setting.province }}{% endif %}{% else %}Shown on every certificate{% endif %}</small></div></div></div>
+  <a class="btn btn-sm" href="{% url 'barangay_settings' %}">Change barangay name &amp; settings</a></div></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:16px">
+  <a class="card" style="margin:0;text-decoration:none;color:inherit" href="{% url 'accounts' %}"><small>Staff waiting approval</small><h1 style="margin:6px 0 0">{{ pending_staff }}</h1></a>
+  <div class="card" style="margin:0"><small>Approved residents</small><h1 style="margin:6px 0 0">{{ total_residents }}</h1></div>
+  <div class="card" style="margin:0"><small>Staff members</small><h1 style="margin:6px 0 0">{{ total_staff }}</h1></div>
+  <a class="card" style="margin:0;text-decoration:none;color:inherit" href="{% url 'staff_dashboard' %}"><small>Total requests</small><h1 style="margin:6px 0 0">{{ total_requests }}</h1></a>
+</div>
+<div class="card"><h3>Requests by status</h3>
+<table>{% for label, n in status_counts %}<tr><td>{{ label }}</td><td><b>{{ n }}</b></td></tr>{% endfor %}</table></div>
+<div class="card"><h3>Latest requests</h3>
+<table><tr><th>Reference</th><th>Resident</th><th>Document</th><th>Status</th></tr>
+{% for r in recent_requests %}<tr><td><a href="{% url 'staff_detail' r.pk %}">{{ r.reference_no }}</a></td><td>{{ r.resident.full_name }}</td><td>{{ r.document_type }}</td><td><span class="badge">{{ r.get_status_display }}</span></td></tr>
+{% empty %}<tr><td colspan="4">No requests yet.</td></tr>{% endfor %}</table></div>
+<div class="card"><h3>Latest logins</h3>
+<table>{% for u in recent_logins %}<tr><td>{{ u.username }}</td><td>{% if u.is_superuser %}Admin{% elif u.is_staff %}Staff{% else %}Resident{% endif %}</td>
+<td>{{ u.last_login|date:"M d, Y h:i A" }}</td></tr>{% empty %}<tr><td>No logins yet.</td></tr>{% endfor %}</table>
+<p><a href="{% url 'user_activity' %}">See all user activity &rarr;</a></p></div>
+{% endblock %}

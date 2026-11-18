@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+{% block title %}Login · Barangay Document Request{% endblock %}
+
+{% block content %}
+<style>
+  body:has(.login-wrap) {
+    margin: 0;
+    min-height: 100vh;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(90,140,230,.35), transparent 40%),
+      radial-gradient(circle at 85% 80%, rgba(40,190,170,.25), transparent 45%),
+      linear-gradient(160deg, #0f2347 0%, #1d3a6b 55%, #14284f 100%);
+    background-attachment: fixed;
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    overflow-x: hidden;
+  }
+  body:has(.login-wrap) nav {
+    background: rgba(255,255,255,.04);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    padding: 16px 32px;
+  }
+  body:has(.login-wrap) nav a {
+    display: none;
+  }
+  body:has(.login-wrap) nav a {
+    opacity: .85;
+    transition: opacity .2s, background .2s;
+    padding: 6px 12px;
+    border-radius: 999px;
+  }
+  body:has(.login-wrap) nav a:hover { opacity: 1; background: rgba(255,255,255,.1); }
+  body:has(.login-wrap) nav .brand { letter-spacing: .3px; }
+  body:has(.login-wrap) main { max-width: none; margin: 0; padding: 0; }
+
+  .login-wrap {
+    min-height: calc(100vh - 62px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .login-wrap::before, .login-wrap::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    pointer-events: none;
+    opacity: .5;
+  }
+  .login-wrap::before {
+    width: 320px; height: 320px; top: -80px; right: -60px;
+    background: #4f8cff;
+    animation: float 9s ease-in-out infinite;
+  }
+  .login-wrap::after {
+    width: 260px; height: 260px; bottom: -60px; left: -40px;
+    background: #2ec4b6;
+    animation: float 11s ease-in-out infinite reverse;
+  }
+  @keyframes float {
+    0%,100% { transform: translateY(0); }
+    50%     { transform: translateY(24px); }
+  }
+
+  .login-card {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 420px;
+    background: rgba(255,255,255,.97);
+    border-radius: 20px;
+    padding: 40px 36px 32px;
+    box-shadow: 0 24px 60px rgba(5,15,40,.45);
+    animation: rise .6s cubic-bezier(.2,.8,.2,1) both;
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(18px) scale(.98); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  .login-emblem {
+    width: 64px; height: 64px;
+    margin: 0 auto 14px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #1d3a6b, #4f8cff);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 10px 24px rgba(29,58,107,.35);
+  }
+  .login-emblem svg { width: 32px; height: 32px; fill: #fff; }
+
+  .login-card h2 {
+    text-align: center;
+    margin: 0 0 4px;
+    font-size: 1.6rem;
+    color: #14284f;
+    letter-spacing: -.3px;
+  }
+  .login-sub {
+    text-align: center;
+    color: #6b7692;
+    font-size: .92rem;
+    margin: 0 0 26px;
+  }
+
+  .field { margin-bottom: 18px; }
+  .field label {
+    display: block;
+    font-size: .85rem;
+    font-weight: 600;
+    color: #33405f;
+    margin-bottom: 6px;
+  }
+  .field input {
+    width: 100%;
+    margin: 0;
+    padding: 12px 14px;
+    font: inherit;
+    font-size: .98rem;
+    border: 1.5px solid #d6dcea;
+    border-radius: 12px;
+    background: #f7f9fd;
+    transition: border-color .2s, box-shadow .2s, background .2s;
+  }
+  .field input:focus {
+    outline: none;
+    border-color: #4f8cff;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(79,140,255,.18);
+  }
+  .field .errorlist {
+    margin: 6px 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: .85rem;
+    color: #c0182f;
+  }
+
+  .login-errors {
+    background: #fdecee;
+    color: #b00020;
+    border: 1px solid #f7c6cd;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: .9rem;
+    margin-bottom: 18px;
+  }
+  .login-errors ul { margin: 0; padding-left: 18px; }
+
+  .login-btn {
+    width: 100%;
+    margin-top: 6px;
+    padding: 13px;
+    font: inherit;
+    font-weight: 700;
+    font-size: 1rem;
+    color: #fff;
+    background: linear-gradient(135deg, #1d3a6b 0%, #3a6fd8 100%);
+    border: 0;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 10px 22px rgba(29,58,107,.3);
+    transition: transform .15s, box-shadow .2s, filter .2s;
+  }
+  .login-btn:hover { transform: translateY(-1px); box-shadow: 0 14px 26px rgba(29,58,107,.36); filter: brightness(1.05); }
+  .login-btn:active { transform: translateY(0); }
+
+  .login-divider {
+    display: flex; align-items: center; gap: 12px;
+    color: #9aa3ba; font-size: .8rem;
+    margin: 24px 0 18px;
+  }
+  .login-divider::before, .login-divider::after {
+    content: ""; flex: 1; height: 1px; background: #e3e7f1;
+  }
+
+  .login-links {
+    text-align: center;
+    font-size: .9rem;
+    color: #5a6582;
+    line-height: 1.9;
+    margin: 0;
+  }
+  .login-links a {
+    color: #3a6fd8;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color .2s;
+  }
+  .login-links a:hover { border-bottom-color: #3a6fd8; }
+
+  @media (max-width: 480px) {
+    .login-card { padding: 32px 22px 26px; }
+    body:has(.login-wrap) nav { padding: 14px 16px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .login-wrap::before, .login-wrap::after, .login-card { animation: none; }
+  }
+</style>
+
+<div class="login-wrap">
+  <div class="login-card">
+    <div class="login-emblem" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5.25 3.4 10.1 8 11 4.6-.9 8-5.75 8-11V5l-8-3zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V13H5V6.3l7-2.6v9.29z"/></svg>
+    </div>
+    <h2>Welcome back</h2>
+    <p class="login-sub">Sign in to request your barangay documents</p>
+
+    {% if form.non_field_errors %}
+      <div class="login-errors">
+        <ul>{% for e in form.non_field_errors %}<li>{{ e }}</li>{% endfor %}</ul>
+      </div>
+    {% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+      <div class="field">
+        <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+        {{ form.username }}
+        {% if form.username.errors %}<ul class="errorlist">{% for e in form.username.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+      </div>
+      <div class="field">
+        <label for="{{ form.password.id_for_label }}">Password</label>
+        {{ form.password }}
+        {% if form.password.errors %}<ul class="errorlist">{% for e in form.password.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+      </div>
+      <button type="submit" class="login-btn">Login</button>
+    </form>
+
+    <div class="login-divider">New here?</div>
+    <p class="login-links">
+      No account? <a href="{% url 'register' %}">Register here</a><br>
+      Barangay staff? <a href="{% url 'staff_register' %}">Register as staff</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

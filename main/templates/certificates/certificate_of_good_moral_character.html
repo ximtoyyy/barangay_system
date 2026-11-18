@@ -1,0 +1,6 @@
+{% extends "certificates/_base.html" %}
+{% block heading %}Certificate of Good Moral Character{% endblock %}
+{% block body %}
+    <p>This is to certify that {% include "certificates/_person.html" %}, is of good moral character and has not been involved in any case or complaint filed before this barangay.</p>
+    <p>This certification is issued upon the request of the above-named person for <b>{{ r.purpose }}</b>.</p>
+{% endblock %}

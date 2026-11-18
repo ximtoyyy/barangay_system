@@ -1,0 +1,6 @@
+{% extends "certificates/_base.html" %}
+{% block heading %}Barangay Certification for Scholarship{% endblock %}
+{% block body %}
+    <p>This is to certify that {% include "certificates/_person.html" %}, is a bonafide resident of this barangay, is of good moral character, and has no derogatory record on file in this office.</p>
+    <p>This certification is issued upon request in support of the scholarship application, for <b>{{ r.purpose }}</b>.</p>
+{% endblock %}

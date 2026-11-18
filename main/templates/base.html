@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Barangay Document Request{% endblock %}</title>
+<link rel="stylesheet" href="{% static 'css/style.css' %}"></head>
+<body>
+{% if user.is_authenticated %}
+<div class="orb o1"></div><div class="orb o2"></div>
+{% with n=request.resolver_match.url_name %}
+<aside class="side">
+  <div class="side-brand">
+    <span class="emblem">{% include "includes/icon.html" with icon="shield" %}</span>
+    <span>{% if barangay_setting.barangay_name %}Barangay {{ barangay_setting.barangay_name }}<small>Document Request System</small>{% else %}Barangay Document Request System{% endif %}</span>
+  </div>
+  <div class="side-links">
+    {% if user.is_staff %}
+      {% if user.is_superuser %}
+        <a href="{% url 'admin_dashboard' %}"{% if n == "admin_dashboard" %} class="active"{% endif %}>Dashboard</a>
+        <a href="{% url 'staff_dashboard' %}"{% if n == "staff_dashboard" or n == "staff_detail" %} class="active"{% endif %}>All Requests</a>
+        <a href="{% url 'accounts' %}"{% if n == "accounts" %} class="active"{% endif %}>Staff Approvals</a>
+        <a href="{% url 'user_activity' %}"{% if n == "user_activity" %} class="active"{% endif %}>User Activity</a>
+        <a href="{% url 'barangay_settings' %}"{% if n == "barangay_settings" %} class="active"{% endif %}>Barangay Settings</a>
+        <a href="/admin/">Admin Panel</a>
+      {% else %}
+        <a href="{% url 'staff_dashboard' %}"{% if n == "staff_dashboard" or n == "staff_detail" %} class="active"{% endif %}>Dashboard</a>
+      {% endif %}
+    {% else %}
+      <a href="{% url 'dashboard' %}"{% if n == "dashboard" or n == "request_detail" %} class="active"{% endif %}>My Requests</a>
+      <a href="{% url 'new_request' %}"{% if n == "new_request" %} class="active"{% endif %}>New Request</a>
+    {% endif %}
+  </div>
+  <div class="side-me">
+    <b>{{ user.resident.full_name|default:user.get_full_name|default:user.username }}</b>
+    <span class="role">{% if user.is_superuser %}Admin{% elif user.is_staff %}Staff{% else %}Resident{% endif %}</span>
+    <small>Logged in<br>{{ user.last_login|date:"M d, Y" }} &middot; {{ user.last_login|date:"h:i A" }}</small>
+    <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button>Logout</button></form>
+  </div>
+</aside>
+{% endwith %}
+{% else %}
+<nav>
+  <span class="brand">{% if barangay_setting.barangay_name %}Barangay {{ barangay_setting.barangay_name }} &middot; {% endif %}Document Request System</span>
+  <a href="{% url 'login' %}">Login</a><a href="{% url 'register' %}">Register</a>
+</nav>
+{% endif %}
+<div class="{% if user.is_authenticated %}content{% endif %}">
+<main>
+  {% for m in messages %}<div class="msg {{ m.tags }}">{{ m }}</div>{% endfor %}
+  {% block content %}{% endblock %}
+</main></div></body></html>

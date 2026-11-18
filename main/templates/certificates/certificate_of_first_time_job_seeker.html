@@ -1,0 +1,7 @@
+{% extends "certificates/_base.html" %}
+{% block heading %}Certificate of First-Time Job Seeker{% endblock %}
+{% block body %}
+    <p>This is to certify that {% include "certificates/_person.html" %}, is a qualified availee of RA 11261, or the First Time Jobseekers Assistance Act of 2019.</p>
+    <p>I further certify that the holder/bearer was informed of his/her rights, including the duties and responsibilities accorded by RA 11261, through the Oath of Undertaking he/she has signed and executed in the presence of our barangay official.</p>
+    <p>This certification is valid only until one (1) year from the date of issuance. It is issued free of charge upon request for <b>{{ r.purpose }}</b>.</p>
+{% endblock %}

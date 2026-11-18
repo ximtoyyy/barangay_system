@@ -1,0 +1,115 @@
+/* Same design as the login and sign-up pages:
+   dark-blue gradient with soft glows, white rounded cards, gradient icon tiles, gradient buttons. */
+:root{--navy:#14284f;--blue:#1d3a6b;--blue2:#3a6fd8;--ink:#33405f;--muted:#6b7692;--line:#d6dcea;--field:#f7f9fd}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;color:#22304f;overflow-x:hidden;
+  background:radial-gradient(circle at 15% 20%,rgba(90,140,230,.35),transparent 40%),
+             radial-gradient(circle at 85% 80%,rgba(40,190,170,.25),transparent 45%),
+             linear-gradient(160deg,#0f2347 0%,#1d3a6b 55%,#14284f 100%);
+  background-attachment:fixed}
+a{color:var(--blue2)}
+.orb{position:fixed;border-radius:50%;filter:blur(60px);pointer-events:none;opacity:.35;z-index:0}
+.orb.o1{width:320px;height:320px;top:-80px;right:-60px;background:#4f8cff;animation:float 9s ease-in-out infinite}
+.orb.o2{width:260px;height:260px;bottom:-60px;left:240px;background:#2ec4b6;animation:float 11s ease-in-out infinite reverse}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(24px)}}
+@keyframes rise{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.orb,.card{animation:none!important}}
+
+nav{background:rgba(255,255,255,.04);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,.08);color:#fff;padding:16px 32px;display:flex;gap:16px;align-items:center}
+nav a,nav button{color:#fff;text-decoration:none;background:none;border:0;font:inherit;cursor:pointer;opacity:.9;padding:6px 12px;border-radius:999px}
+nav a:hover{opacity:1;background:rgba(255,255,255,.1)}
+nav .brand{font-weight:700;margin-right:auto;letter-spacing:.3px}
+main{position:relative;z-index:1;max-width:980px;margin:28px auto;padding:0 18px}
+
+/* cards = the white login card */
+.card{position:relative;background:rgba(255,255,255,.97);padding:30px 32px;border-radius:20px;box-shadow:0 24px 60px rgba(5,15,40,.45);
+  margin-bottom:20px;animation:rise .6s cubic-bezier(.2,.8,.2,1) both}
+.card.narrow{max-width:680px;margin-left:auto;margin-right:auto}
+.card h3{margin:0 0 10px;color:var(--navy)}
+.card h1{color:var(--navy)}
+a.card{display:block;transition:transform .2s}
+a.card:hover{transform:translateY(-3px)}
+.sub{color:var(--muted);font-size:.92rem;margin:0}
+.hint{color:var(--muted);font-size:.85rem;margin:-6px 0 16px}
+
+/* icon tile + title (same as the emblem on the login card) */
+.emblem{width:52px;height:52px;flex:none;border-radius:16px;background:linear-gradient(135deg,#1d3a6b,#4f8cff);
+  display:flex;align-items:center;justify-content:center;box-shadow:0 10px 24px rgba(29,58,107,.35)}
+.emblem svg{width:26px;height:26px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.page-head{display:flex;align-items:center;gap:14px;margin-bottom:24px}
+.page-head h2{margin:0;font-size:1.5rem;color:var(--navy);letter-spacing:-.3px}
+.page-head .sub{margin-top:2px}
+.page-head.center{flex-direction:column;text-align:center;gap:0}
+.page-head.center .emblem{width:64px;height:64px;margin-bottom:14px}
+.page-head.center .emblem svg{width:32px;height:32px}
+.page-head.center .sub{margin-top:4px}
+
+/* fields + labels */
+.field{margin-bottom:18px;min-width:0}
+.field label,label.lbl{display:block;font-size:.85rem;font-weight:600;color:var(--ink);margin-bottom:6px}
+input:not([type=radio]):not([type=checkbox]),select,textarea{
+  width:100%;margin:0;padding:12px 14px;font:inherit;font-size:.98rem;color:inherit;
+  border:1.5px solid var(--line);border-radius:12px;background:var(--field);
+  transition:border-color .2s,box-shadow .2s,background .2s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#4f8cff;background:#fff;box-shadow:0 0 0 4px rgba(79,140,255,.18)}
+input[type=hidden]{display:none}
+input[type=file]{padding:10px;background:#fff}
+input[type=radio],input[type=checkbox]{width:auto;margin:0;accent-color:var(--blue2)}
+.field .help{display:block;font-size:.78rem;color:#8a93ab;margin-top:4px}
+.errorlist{margin:6px 0 0;padding:0;list-style:none;font-size:.85rem;color:#c0182f}
+.choice-list>div{margin-bottom:10px}
+.choice-list>div>label{display:flex;align-items:center;gap:10px;margin:0;padding:13px 14px;font-weight:600;color:var(--ink);
+  border:1.5px solid var(--line);border-radius:12px;background:var(--field);cursor:pointer;font-size:.95rem}
+.choice-list>div>label:has(input:checked){border-color:var(--blue2);background:#eef4ff;box-shadow:0 0 0 4px rgba(79,140,255,.15)}
+
+/* buttons */
+.btn{display:inline-block;padding:12px 22px;font:inherit;font-weight:700;font-size:.95rem;color:#fff;text-decoration:none;text-align:center;
+  background:linear-gradient(135deg,#1d3a6b 0%,#3a6fd8 100%);border:0;border-radius:12px;cursor:pointer;
+  box-shadow:0 10px 22px rgba(29,58,107,.3);transition:transform .15s,box-shadow .2s,filter .2s}
+.btn:hover{transform:translateY(-1px);box-shadow:0 14px 26px rgba(29,58,107,.36);filter:brightness(1.05)}
+.btn:active{transform:none}
+.btn-block{display:block;width:100%;padding:13px;font-size:1rem}
+.btn-sm{padding:6px 14px;font-size:.82rem;border-radius:10px;white-space:nowrap}
+.btn-success{background:linear-gradient(135deg,#17653a 0%,#2fa866 100%);box-shadow:0 10px 22px rgba(23,101,58,.28)}
+.btn-danger{background:linear-gradient(135deg,#a3162b 0%,#e0485c 100%);box-shadow:0 10px 22px rgba(163,22,43,.28)}
+.btn-light{background:#fff;color:var(--blue);border:1.5px solid var(--line);box-shadow:none}
+.btn-sm,.btn-sm:hover{box-shadow:none}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+
+/* tables, badges, messages */
+table{width:100%;border-collapse:collapse}
+th{font-size:.78rem;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);background:#f4f7fd}
+th,td{text-align:left;padding:12px 10px;border-bottom:1px solid #e8ecf5;vertical-align:middle}
+.badge{padding:3px 10px;border-radius:999px;background:#e3e9f7;color:var(--blue);font-size:.8rem;font-weight:600}
+.msg{position:relative;z-index:1;background:rgba(255,255,255,.97);color:#22304f;padding:14px 18px;border-radius:14px;margin-bottom:16px;
+  border-left:5px solid #2fa866;box-shadow:0 12px 30px rgba(5,15,40,.3);animation:rise .5s both}
+.msg.error{border-left-color:#e0485c}.msg.warning{border-left-color:#f0a020}.msg.info{border-left-color:#3a6fd8}
+.notice{background:#eef4ff;color:#2d4a7a;border:1px solid #d3e2ff;border-radius:12px;padding:12px 16px;margin:0 0 16px;font-size:.92rem}
+.filters{display:flex;gap:8px}.filters input,.filters select{margin:0}
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px 20px;margin:6px 0 18px}
+.info-grid .full{grid-column:1/-1}
+.info-grid>div>span{display:block;font-size:.78rem;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);margin-bottom:2px}
+.info-grid small{display:block;color:var(--muted)}
+.qr-box{display:flex;gap:22px;align-items:center;flex-wrap:wrap;margin-bottom:18px}
+.qr-box img{width:230px;max-width:100%;padding:10px;background:#fff;border:1.5px solid var(--line);border-radius:14px}
+.qr-box ol{margin:8px 0 0;padding-left:20px;line-height:1.7}
+
+/* sidebar = glass panel like the login page's top bar */
+.side{position:fixed;top:0;left:0;bottom:0;width:250px;z-index:2;display:flex;flex-direction:column;padding:18px 16px;color:#fff;
+  background:rgba(255,255,255,.05);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-right:1px solid rgba(255,255,255,.1)}
+.side-brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:1rem;line-height:1.25;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.12);margin-bottom:14px}
+.side-brand .emblem{width:42px;height:42px;border-radius:13px;box-shadow:0 6px 16px rgba(0,0,0,.3)}
+.side-brand .emblem svg{width:22px;height:22px}
+.side-brand small{display:block;font-weight:400;font-size:.76rem;opacity:.75;margin-top:2px}
+.side-links{display:flex;flex-direction:column;gap:4px}
+.side-links a{color:#fff;text-decoration:none;padding:10px 14px;border-radius:999px;opacity:.85;transition:opacity .2s,background .2s}
+.side-links a:hover{opacity:1;background:rgba(255,255,255,.1)}
+.side-links a.active{opacity:1;background:rgba(255,255,255,.18);font-weight:600}
+.side-me{margin-top:auto;border-top:1px solid rgba(255,255,255,.12);padding-top:14px;font-size:.9em;display:flex;flex-direction:column;gap:4px}
+.side-me .role{background:rgba(255,255,255,.16);align-self:flex-start;padding:1px 10px;border-radius:999px;font-size:.78em}
+.side-me small{color:#d6def0;line-height:1.4;margin-top:4px}
+.side-me form{margin:10px 0 0}
+.side-me button{width:100%;background:rgba(255,255,255,.12);color:#fff;border:0;border-radius:12px;padding:10px;cursor:pointer;font:inherit;font-weight:600;transition:background .2s}
+.side-me button:hover{background:rgba(255,255,255,.24)}
+.content{margin-left:250px;position:relative;z-index:1}
+@media(max-width:720px){.side{position:static;width:100%}.content{margin-left:0}.card{padding:24px 20px}}

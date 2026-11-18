@@ -1,0 +1,7 @@
+{% extends "certificates/_base.html" %}
+{% block heading %}Certificate of Low Income{% endblock %}
+{% block body %}
+    <p>This is to certify that {% include "certificates/_person.html" %}, belongs to a low-income family of this barangay.</p>
+    <p>The estimated monthly income of the family is <b>{{ r.details|default:"PHP ____________" }}</b>.</p>
+    <p>This certification is issued upon the request of the above-named person for <b>{{ r.purpose }}</b>.</p>
+{% endblock %}

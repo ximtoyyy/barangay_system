@@ -1,0 +1,6 @@
+{% extends "certificates/_base.html" %}
+{% block heading %}Certificate of Indigency{% endblock %}
+{% block body %}
+    <p>This is to certify that {% include "certificates/_person.html" %}, belongs to an indigent family of this barangay and has no sufficient income or means of support.</p>
+    <p>This certification is issued upon the request of the above-named person for <b>{{ r.purpose }}</b>.</p>
+{% endblock %}

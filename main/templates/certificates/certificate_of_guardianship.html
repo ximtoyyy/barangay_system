@@ -1,0 +1,6 @@
+{% extends "certificates/_base.html" %}
+{% block heading %}Certificate of Guardianship{% endblock %}
+{% block body %}
+    <p>This is to certify that {% include "certificates/_person.html" %}, is the guardian of <b>{{ r.details|default:"____________________" }}</b> (name of the minor / ward), who is under the care and custody of the said guardian.</p>
+    <p>This certification is issued upon the request of the above-named person for <b>{{ r.purpose }}</b>.</p>
+{% endblock %}

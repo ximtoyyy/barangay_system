@@ -1,0 +1,7 @@
+{% extends "certificates/_base.html" %}
+{% block heading %}Barangay Certification of Birth{% endblock %}
+{% block body %}
+    <p>This is to certify, based on the records of this barangay, that <b>{{ r.details|default:"____________________" }}</b> (name of the child) was born and is a resident of this barangay.</p>
+    <p>Date of birth: ______________________ &nbsp; Place of birth: ______________________</p><p>Name of parents: ____________________________________</p>
+    <p>This certification is issued upon the request of {% include "certificates/_person.html" %}, for <b>{{ r.purpose }}</b>.</p>
+{% endblock %}

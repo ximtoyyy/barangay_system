@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">{% include "includes/page_header.html" with icon="list" title="My Requests" sub="Track the documents you requested" %}
+<p><a class="btn" href="{% url 'new_request' %}">+ New Request</a></p>
+<table><tr><th>Reference</th><th>Document</th><th>Fee</th><th>Status</th><th>Date</th><th></th></tr>
+{% for r in requests %}<tr><td>{{ r.reference_no }}</td><td>{{ r.document_type }}</td><td>{{ r.fee_label }}{% if r.payment_status != "free" %} <span class="badge">{{ r.get_payment_status_display }}</span>{% endif %}</td>
+<td><span class="badge">{{ r.get_status_display }}</span></td><td>{{ r.date_requested|date:"M d, Y" }}</td>
+<td><a href="{% url 'request_detail' r.pk %}">View</a>{% if r.payment_method == "qrph" and r.payment_status == "unpaid" %} <a class="btn btn-sm" href="{% url 'request_detail' r.pk %}">Pay now</a>{% endif %}</td></tr>
+{% empty %}<tr><td colspan="6">No requests yet.</td></tr>{% endfor %}</table></div>
+{% endblock %}

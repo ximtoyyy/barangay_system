@@ -1,0 +1,7 @@
+{% extends "certificates/_base.html" %}
+{% block heading %}Barangay Business Clearance{% endblock %}
+{% block body %}
+    <p>This is to certify that the business described below is hereby granted clearance to operate in this barangay, subject to compliance with existing barangay and municipal ordinances.</p>
+    <table class="cert-table"><tr><td>Business name:</td><td><b>{{ r.details|default:"____________________" }}</b></td></tr><tr><td>Owner / operator:</td><td><b>{{ res.full_name|upper }}</b></td></tr><tr><td>Business address:</td><td>{{ res.address }}{% if res.purok %}, {{ res.purok }}{% endif %}, Barangay {{ b.barangay_name|default:"__________" }}</td></tr><tr><td>Nature of business:</td><td>____________________</td></tr></table>
+    <p>This clearance is issued upon the request of the owner for <b>{{ r.purpose }}</b>. Fee paid: {{ r.fee_label }}. O.R. No.: ____________.</p>
+{% endblock %}

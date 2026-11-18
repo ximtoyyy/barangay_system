@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">{% include "includes/page_header.html" with icon="clock" title="User Activity" sub="When each person last logged in" %}
+<form class="filters" method="get"><input name="q" value="{{ q }}" placeholder="Search email / username">
+<select name="role"><option value="">Everyone</option>
+<option value="staff" {% if role == "staff" %}selected{% endif %}>Admin &amp; Staff</option>
+<option value="resident" {% if role == "resident" %}selected{% endif %}>Residents</option></select>
+<button class="btn">Filter</button></form><br>
+<table><tr><th>Name</th><th>Email / username</th><th>Role</th><th>Last login (date &amp; time)</th></tr>
+{% for u in users %}<tr>
+<td>{% if u.resident %}{{ u.resident.full_name }}{% else %}{{ u.get_full_name|default:"-" }}{% endif %}</td>
+<td>{{ u.username }}</td>
+<td><span class="badge">{% if u.is_superuser %}Admin{% elif u.is_staff %}Staff{% else %}Resident{% endif %}</span></td>
+<td>{% if u.last_login %}{{ u.last_login|date:"F d, Y" }} &mdash; {{ u.last_login|date:"h:i A" }}{% else %}Never logged in{% endif %}</td>
+</tr>{% endfor %}</table></div>
+{% endblock %}

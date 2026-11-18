@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<form method="post" enctype="multipart/form-data">{% csrf_token %}
+<div class="card narrow">{% include "includes/page_header.html" with icon="settings" title="Barangay Settings" sub="Type any barangay name. It appears in the menu and on every printed certificate. You can change it anytime." center=True %}
+{% include "includes/field.html" with field=form.barangay_name %}
+{% include "includes/field.html" with field=form.municipality %}
+{% include "includes/field.html" with field=form.province %}
+{% include "includes/field.html" with field=form.punong_barangay %}</div>
+
+<div class="card narrow">{% include "includes/page_header.html" with icon="layout" title="Certificate look" sub="Colour style and logos printed on certificates" %}
+{% include "includes/field.html" with field=form.certificate_style %}
+{% include "includes/field.html" with field=form.logo_image %}
+{% include "includes/field.html" with field=form.logo2_image %}</div>
+
+<div class="card narrow">{% include "includes/page_header.html" with icon="card" title="Online payment (QR Ph)" sub="Residents who choose to pay online see this QR code. Remove it to accept cash only." %}
+{% include "includes/field.html" with field=form.qr_image %}
+{% include "includes/field.html" with field=form.qr_account_name %}
+{% include "includes/field.html" with field=form.qr_note %}</div>
+{% if form.non_field_errors %}<ul class="errorlist">{% for e in form.non_field_errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+<button class="btn">Save settings</button>
+</form>
+{% endblock %}

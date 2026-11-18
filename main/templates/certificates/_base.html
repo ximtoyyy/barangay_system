@@ -1,0 +1,100 @@
+{% with style=b.certificate_style|default:"blue" %}<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<title>{% block title %}{{ r.document_type.name }}{% endblock %} - {{ r.reference_no }}</title>
+<style>
+  body{margin:0;min-height:100vh;background:radial-gradient(circle at 15% 20%,rgba(90,140,230,.35),transparent 40%),radial-gradient(circle at 85% 80%,rgba(40,190,170,.25),transparent 45%),linear-gradient(160deg,#0f2347 0%,#1d3a6b 55%,#14284f 100%);background-attachment:fixed;font-family:"Segoe UI",system-ui,sans-serif}
+  .toolbar{max-width:210mm;margin:14px auto;display:flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:.9rem;color:#e6edfb}
+  .toolbar button{background:linear-gradient(135deg,#1d3a6b,#3a6fd8);color:#fff;border:0;border-radius:12px;padding:10px 22px;font:inherit;font-weight:700;cursor:pointer}
+  .toolbar select{border:1.5px solid #d6dcea;border-radius:10px;padding:8px 10px;font:inherit;background:#f7f9fd}
+  .toolbar a{color:#cfe0ff}
+
+  /* three colour styles: the staff can switch between them before printing */
+  .theme-blue   {--primary:#1d3a6b;--accent:#3a6fd8;--soft:#eef3fb}
+  .theme-classic{--primary:#6b4f10;--accent:#c9a227;--soft:#fbf5e1}
+  .theme-green  {--primary:#17563a;--accent:#2fa866;--soft:#eef8f1}
+
+  .sheet{position:relative;width:210mm;height:297mm;margin:0 auto 30px;background:#fff;box-sizing:border-box;overflow:hidden;
+         padding:19mm 22mm 0;font-family:Georgia,"Times New Roman",serif;font-size:13pt;line-height:1.75;color:#1b1b1b;
+         box-shadow:0 8px 30px rgba(20,40,79,.18)}
+  .sheet *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .frame{position:absolute;top:8mm;left:8mm;right:8mm;bottom:8mm;border:1.4mm double var(--primary)}
+  .frame i{position:absolute;width:9mm;height:9mm;border:0 solid var(--accent)}
+  .frame i:nth-child(1){top:-3.2mm;left:-3.2mm;border-top-width:1.3mm;border-left-width:1.3mm}
+  .frame i:nth-child(2){top:-3.2mm;right:-3.2mm;border-top-width:1.3mm;border-right-width:1.3mm}
+  .frame i:nth-child(3){bottom:-3.2mm;left:-3.2mm;border-bottom-width:1.3mm;border-left-width:1.3mm}
+  .frame i:nth-child(4){bottom:-3.2mm;right:-3.2mm;border-bottom-width:1.3mm;border-right-width:1.3mm}
+  .watermark{position:absolute;top:52%;left:50%;width:125mm;height:125mm;margin:-62mm 0 0 -62mm;opacity:.07}
+  .watermark img,.watermark svg{width:100%;height:100%;object-fit:contain}
+  .content{position:relative}
+
+  .head{display:flex;align-items:center;justify-content:space-between}
+  .logo{width:27mm;height:27mm;flex:none}
+  .logo img,.logo svg{width:100%;height:100%;object-fit:contain}
+  .logo svg,.watermark svg{color:var(--primary)}
+  .head-text{flex:1;text-align:center;line-height:1.35;font-size:11.5pt;padding:0 6px}
+  .head-text h2{margin:5px 0 2px;font-size:19pt;letter-spacing:2px;color:var(--primary)}
+  .office{font-weight:bold;font-size:10.5pt;letter-spacing:1.5px;color:var(--primary)}
+  .divider{display:flex;align-items:center;gap:10px;margin:10px 0 6px}
+  .divider::before,.divider::after{content:"";flex:1;height:2px;background:var(--primary)}
+  .divider span{width:9px;height:9px;background:var(--accent);transform:rotate(45deg)}
+  .control{text-align:right;font-size:10pt;color:#444;margin:0 0 8px}
+
+  .ribbon{text-align:center;margin:0 0 20px}
+  .ribbon h1{display:inline-block;margin:0;padding:8px 40px;background:var(--primary);color:#fff;font-size:16pt;letter-spacing:3px;
+             text-transform:uppercase;font-weight:bold;border-top:2px solid var(--accent);border-bottom:2px solid var(--accent)}
+
+  .body p{margin:0 0 14px;text-align:justify;text-indent:12mm}
+  .body p.plain{text-indent:0}
+  .body[contenteditable]:focus{outline:1px dashed var(--accent)}
+  table.cert-table{border-collapse:collapse;margin:6px 0 16px 12mm;background:var(--soft);border-left:3px solid var(--accent)}
+  table.cert-table td{padding:5px 16px 5px 12px;vertical-align:top}
+  table.cert-table td:first-child{white-space:nowrap}
+
+  .signs{position:absolute;left:22mm;right:22mm;bottom:33mm;display:flex;justify-content:space-between;align-items:flex-end;text-align:center;font-size:11.5pt;line-height:1.3}
+  .sign-box{width:62mm}
+  .sign-box .line{border-top:1px solid #000;margin-top:34px;padding-top:4px}
+  .seal{width:30mm;height:30mm;border:1.5px dashed var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;
+        color:var(--accent);font-size:8.5pt;letter-spacing:1px;text-transform:uppercase}
+  .foot{position:absolute;left:22mm;right:22mm;bottom:14mm;text-align:center;font-size:9pt;color:#444;border-top:1px solid var(--accent);padding-top:5px;line-height:1.4}
+  @page{size:A4;margin:0}
+  @media print{body{background:#fff}.toolbar{display:none}.sheet{box-shadow:none;margin:0}}
+</style></head><body>
+<div class="toolbar"><button onclick="window.print()">Print</button>
+  <label>Style: <select id="theme">
+    <option value="blue"{% if style == "blue" %} selected{% endif %}>Royal Blue</option>
+    <option value="classic"{% if style == "classic" %} selected{% endif %}>Classic Gold</option>
+    <option value="green"{% if style == "green" %} selected{% endif %}>Forest Green</option></select></label>
+  <a href="{% url 'staff_detail' r.pk %}">&larr; Back to request</a>
+  <span>Tip: click the text to edit or fill in blanks before printing.</span></div>
+
+<div class="sheet theme-{{ style }}" id="sheet">
+  <div class="frame"><i></i><i></i><i></i><i></i></div>
+  <div class="watermark">{% if b.logo_image %}<img src="{{ b.logo_image.url }}" alt="">{% else %}{% include "certificates/_emblem.html" %}{% endif %}</div>
+  <div class="content">
+    <div class="head">
+      <div class="logo">{% if b.logo_image %}<img src="{{ b.logo_image.url }}" alt="Barangay logo">{% else %}{% include "certificates/_emblem.html" %}{% endif %}</div>
+      <div class="head-text">
+        Republic of the Philippines<br>Province of {{ b.province|default:"______________" }}<br>Municipality/City of {{ b.municipality|default:"______________" }}
+        <h2>BARANGAY {{ b.barangay_name|upper|default:"______________" }}</h2>
+        <div class="office">OFFICE OF THE PUNONG BARANGAY</div>
+      </div>
+      <div class="logo">{% if b.logo2_image %}<img src="{{ b.logo2_image.url }}" alt="Municipality logo">{% endif %}</div>
+    </div>
+    <div class="divider"><span></span></div>
+    <p class="control">Control No.: <b>{{ r.reference_no }}</b></p>
+    <div class="ribbon"><h1>{% block heading %}{{ r.document_type.name }}{% endblock %}</h1></div>
+    <div class="body" contenteditable="true">
+      <p class="plain"><b>TO WHOM IT MAY CONCERN:</b></p>
+      {% block body %}{% endblock %}
+      <p>Issued this {% now "jS" %} day of {% now "F, Y" %} at Barangay {{ b.barangay_name|default:"__________" }}{% if b.municipality %}, {{ b.municipality }}{% endif %}{% if b.province %}, {{ b.province }}{% endif %}.</p>
+    </div>
+  </div>
+  <div class="signs">
+    <div class="sign-box"><div class="line">{{ res.full_name|upper }}</div>Signature of requesting party</div>
+    <div class="seal">Dry seal</div>
+    <div class="sign-box"><div class="line"><b>{{ b.punong_barangay|upper|default:"______________________" }}</b></div>Punong Barangay</div>
+  </div>
+  <div class="foot">Fee: {{ r.fee_label }}{% if r.payment_status == "paid" %} (Paid){% endif %}{% if r.handler_name %} &middot; Processed by {{ r.handler_name }}{% endif %}<br>Not valid without the official dry seal of the barangay.</div>
+</div>
+<script>document.getElementById("theme").onchange=function(){document.getElementById("sheet").className="sheet theme-"+this.value};</script>
+</body></html>{% endwith %}

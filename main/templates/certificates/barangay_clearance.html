@@ -1,0 +1,6 @@
+{% extends "certificates/_base.html" %}
+{% block heading %}Barangay Clearance{% endblock %}
+{% block body %}
+    <p>This is to certify that {% include "certificates/_person.html" %}, is known to this office to be of good moral character and a law-abiding citizen, and that the said person has no derogatory record on file in this barangay as of this date.</p>
+    <p>This clearance is issued upon the request of the above-named person for <b>{{ r.purpose }}</b>.</p>
+{% endblock %}

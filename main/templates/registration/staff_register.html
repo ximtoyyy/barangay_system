@@ -1,0 +1,269 @@
+{% extends "base.html" %}
+{% block title %}Staff Registration · Barangay Document Request{% endblock %}
+
+{% block content %}
+<style>
+  body:has(.reg-wrap) {
+    margin: 0;
+    min-height: 100vh;
+    background:
+      radial-gradient(circle at 10% 15%, rgba(90,140,230,.30), transparent 40%),
+      radial-gradient(circle at 90% 85%, rgba(40,190,170,.22), transparent 45%),
+      linear-gradient(160deg, #0f2347 0%, #1d3a6b 55%, #14284f 100%);
+    background-attachment: fixed;
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    overflow-x: hidden;
+  }
+  body:has(.reg-wrap) nav {
+    background: rgba(255,255,255,.04);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    padding: 16px 32px;
+  }
+  body:has(.reg-wrap) nav a {
+    display: none;
+  }
+  body:has(.reg-wrap) nav a {
+    opacity: .85;
+    transition: opacity .2s, background .2s;
+    padding: 6px 12px;
+    border-radius: 999px;
+  }
+  body:has(.reg-wrap) nav a:hover { opacity: 1; background: rgba(255,255,255,.1); }
+  body:has(.reg-wrap) nav .brand { letter-spacing: .3px; }
+  body:has(.reg-wrap) main { max-width: none; margin: 0; padding: 0; }
+
+  .reg-wrap {
+    min-height: calc(100vh - 62px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .reg-wrap::before, .reg-wrap::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    pointer-events: none;
+    opacity: .45;
+  }
+  .reg-wrap::before {
+    width: 320px; height: 320px; top: -80px; left: -60px;
+    background: #4f8cff;
+    animation: float 9s ease-in-out infinite;
+  }
+  .reg-wrap::after {
+    width: 280px; height: 280px; bottom: -70px; right: -50px;
+    background: #2ec4b6;
+    animation: float 11s ease-in-out infinite reverse;
+  }
+  @keyframes float {
+    0%,100% { transform: translateY(0); }
+    50%     { transform: translateY(24px); }
+  }
+
+  .reg-card {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 560px;
+    background: rgba(255,255,255,.97);
+    border-radius: 20px;
+    padding: 40px 40px 32px;
+    box-shadow: 0 24px 60px rgba(5,15,40,.45);
+    animation: rise .6s cubic-bezier(.2,.8,.2,1) both;
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(18px) scale(.98); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  .reg-emblem {
+    width: 60px; height: 60px;
+    margin: 0 auto 14px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #1d3a6b, #4f8cff);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 10px 24px rgba(29,58,107,.35);
+  }
+  .reg-emblem svg { width: 30px; height: 30px; fill: #fff; }
+
+  .reg-card h2 {
+    text-align: center;
+    margin: 0 0 4px;
+    font-size: 1.6rem;
+    color: #14284f;
+    letter-spacing: -.3px;
+  }
+  .reg-sub {
+    text-align: center;
+    color: #6b7692;
+    font-size: .92rem;
+    margin: 0 0 26px;
+  }
+
+  .reg-notice {
+    background: #eef4ff;
+    color: #2d4a7a;
+    border: 1px solid #d3e2ff;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: .88rem;
+    margin: 0 0 22px;
+  }
+  .reg-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 16px;
+  }
+  .reg-grid .full { grid-column: 1 / -1; }
+
+  .field { margin-bottom: 18px; min-width: 0; }
+  .field label {
+    display: block;
+    font-size: .85rem;
+    font-weight: 600;
+    color: #33405f;
+    margin-bottom: 6px;
+  }
+  .field input {
+    width: 100%;
+    margin: 0;
+    padding: 12px 14px;
+    font: inherit;
+    font-size: .98rem;
+    border: 1.5px solid #d6dcea;
+    border-radius: 12px;
+    background: #f7f9fd;
+    transition: border-color .2s, box-shadow .2s, background .2s;
+  }
+  .field input:focus {
+    outline: none;
+    border-color: #4f8cff;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(79,140,255,.18);
+  }
+  .field .errorlist {
+    margin: 6px 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: .85rem;
+    color: #c0182f;
+  }
+  .field .help {
+    display: block;
+    font-size: .78rem;
+    color: #8a93ab;
+    margin-top: 4px;
+  }
+
+  .reg-btn {
+    width: 100%;
+    margin-top: 8px;
+    padding: 13px;
+    font: inherit;
+    font-weight: 700;
+    font-size: 1rem;
+    color: #fff;
+    background: linear-gradient(135deg, #1d3a6b 0%, #3a6fd8 100%);
+    border: 0;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 10px 22px rgba(29,58,107,.3);
+    transition: transform .15s, box-shadow .2s, filter .2s;
+  }
+  .reg-btn:hover { transform: translateY(-1px); box-shadow: 0 14px 26px rgba(29,58,107,.36); filter: brightness(1.05); }
+  .reg-btn:active { transform: translateY(0); }
+
+  .reg-divider {
+    display: flex; align-items: center; gap: 12px;
+    color: #9aa3ba; font-size: .8rem;
+    margin: 22px 0 16px;
+  }
+  .reg-divider::before, .reg-divider::after {
+    content: ""; flex: 1; height: 1px; background: #e3e7f1;
+  }
+  .reg-links {
+    text-align: center;
+    font-size: .9rem;
+    color: #5a6582;
+    line-height: 1.9;
+    margin: 0;
+  }
+  .reg-links a {
+    color: #3a6fd8;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color .2s;
+  }
+  .reg-links a:hover { border-bottom-color: #3a6fd8; }
+
+  @media (max-width: 560px) {
+    .reg-card { padding: 30px 22px 24px; }
+    .reg-grid { grid-template-columns: 1fr; }
+    body:has(.reg-wrap) nav { padding: 14px 16px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reg-wrap::before, .reg-wrap::after, .reg-card { animation: none; }
+  }
+</style>
+
+<div class="reg-wrap">
+  <div class="reg-card">
+    <div class="reg-emblem" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+    </div>
+    <h2>Staff Registration</h2>
+    <p class="reg-sub">Set up your barangay staff account.</p>
+
+    <div class="reg-notice">Your account must be approved by the barangay admin before you can log in.</div>
+
+    <form method="post">
+      {% csrf_token %}
+      <div class="reg-grid">
+        <div class="field full">
+          <label for="{{ form.email.id_for_label }}">Email</label>
+          {{ form.email }}
+          {% if form.email.errors %}<ul class="errorlist">{% for e in form.email.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+        <div class="field">
+          <label for="{{ form.password.id_for_label }}">Password</label>
+          {{ form.password }}
+          {% if form.password.errors %}<ul class="errorlist">{% for e in form.password.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+        <div class="field">
+          <label for="{{ form.full_name.id_for_label }}">Full name</label>
+          {{ form.full_name }}
+          {% if form.full_name.errors %}<ul class="errorlist">{% for e in form.full_name.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+        <div class="field full">
+          <label for="{{ form.position.id_for_label }}">Position (e.g. Secretary, Clerk)</label>
+          {{ form.position }}
+          {% if form.position.errors %}<ul class="errorlist">{% for e in form.position.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+        <div class="field full">
+          <label for="{{ form.contact_no.id_for_label }}">Contact no</label>
+          {{ form.contact_no }}
+          {% if form.contact_no.errors %}<ul class="errorlist">{% for e in form.contact_no.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+      </div>
+
+      {% if form.non_field_errors %}
+        <ul class="errorlist">{% for e in form.non_field_errors %}<li>{{ e }}</li>{% endfor %}</ul>
+      {% endif %}
+
+      <button type="submit" class="reg-btn">Create Staff Account</button>
+    </form>
+
+    <div class="reg-divider">Already registered?</div>
+    <p class="reg-links">
+      <a href="{% url 'login' %}">Log in to your account</a><br>
+      Resident? <a href="{% url 'register' %}">Register as resident</a>
+    </p>
+  </div>
+</div>
+{% endblock %}
