@@ -53,6 +53,9 @@ DATABASES = {"default": {
     "OPTIONS": {"charset": "utf8mb4"},
 }}
 
+if os.environ.get("DB_SSL") == "True":
+    DATABASES["default"]["OPTIONS"]["ssl"] = {"ca": str(BASE_DIR / "certs" / "aiven-ca.pem")}
+
 # ---------------------------------------------------------------- >>> EDIT: email
 # Without EMAIL_HOST_USER, emails are only printed in the terminal (for testing).
 # For real emails set EMAIL_HOST_USER, EMAIL_HOST_PASSWORD (Gmail App Password) and BARANGAY_EMAIL.
