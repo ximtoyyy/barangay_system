@@ -3,9 +3,9 @@ import os
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-SECRET_KEY = "change-me-in-production"
-DEBUG = True                      # set to False when the system goes live
-ALLOWED_HOSTS = ["*"]
+SECRET_KEY = os.environ.get("SECRET_KEY", "change-me-in-production")
+DEBUG = os.environ.get("DEBUG", "True") == "True"
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
 
 # ---------------------------------------------------------------- apps
 INSTALLED_APPS = [
@@ -15,6 +15,7 @@ INSTALLED_APPS = [
 ]
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -46,7 +47,7 @@ DATABASES = {"default": {
     "ENGINE": "django.db.backends.mysql",
     "NAME": os.environ.get("DB_NAME", "barangay_db"),       # create this database first
     "USER": os.environ.get("DB_USER", "root"),
-    "PASSWORD": os.environ.get("DB_PASSWORD", "12345"),          # XAMPP's root has an empty password by default
+    "PASSWORD": os.environ.get("DB_PASSWORD", ""),          # XAMPP's root has an empty password by default
     "HOST": os.environ.get("DB_HOST", "localhost"),
     "PORT": os.environ.get("DB_PORT", "3306"),
     "OPTIONS": {"charset": "utf8mb4"},
@@ -73,6 +74,7 @@ else:
 TIME_ZONE = "Asia/Manila"
 USE_TZ = True
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = "/media/"                     # uploaded IDs/proof go to the "media" folder
 MEDIA_ROOT = BASE_DIR / "media"
 LOGIN_URL = "login"
